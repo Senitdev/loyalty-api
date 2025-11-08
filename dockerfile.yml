@@ -1,0 +1,38 @@
+# -----------------------------
+# Étape 1 : Build de l'application Go
+# -----------------------------
+FROM golang:1.22-alpine AS builder
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# Copier les fichiers go.mod et go.sum
+COPY go.mod go.sum ./
+
+# Télécharger les dépendances
+RUN go mod download
+
+# Copier le reste du code source
+COPY . .
+
+# Compiler le binaire
+RUN go build -o loyaltycard cmd/main.go
+
+# -----------------------------
+# Étape 2 : Image finale
+# -----------------------------
+FROM alpine:3.20
+
+WORKDIR /app
+
+# Copier le binaire depuis l'étape de build
+COPY --from=builder /app/loyaltycard .
+
+# Copier les fichiers de configuration si nécessaires
+COPY .env .env
+
+# Exposer le port de l’API
+EXPOSE 9090
+
+# Commande de lancement
+CMD ["./loyaltycard"]

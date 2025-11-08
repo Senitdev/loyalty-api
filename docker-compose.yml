@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+  # 🗄️ Base de données PostgreSQL
+  postgres:
+    image: postgres:16
+    container_name: loyalty_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: loyalty_user
+      POSTGRES_PASSWORD: loyalty_pass
+      POSTGRES_DB: loyalty_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # ⚙️ Backend Go (Gin)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: loyalty_backend
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=loyalty_user
+      - DB_PASSWORD=loyalty_pass
+      - DB_NAME=loyalty_db
+      - DB_PORT=5432
+      - SERVER_PORT=9090
+      - CORS_ORIGIN=http://localhost:3000
+    ports:
+      - "9090:9090"
+    restart: on-failure
+
+  # 💻 Frontend Next.js (PWA)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: loyalty_frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:9090
+    restart: on-failure
+
+volumes:
+  postgres_data:
