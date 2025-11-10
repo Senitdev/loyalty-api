@@ -11,15 +11,15 @@ type TransactionService interface {
 	DeleteById(id int) error
 	FindAll() []models.Transaction
 	FindbyLoyalCard(id int) []models.Transaction
-	FindbyMerchant(id int) []models.Transaction
+	FindbyMerchant(merchant_id int, startDate, endDate string) ([]models.Transaction, error)
 }
 type transactionService struct {
 	service repository.TransactionRepository
 }
 
 // FindbyMerchant implements TransactionService.
-func (t *transactionService) FindbyMerchant(id int) []models.Transaction {
-	return t.service.FindbyMerchant(id)
+func (t *transactionService) FindbyMerchant(id int, startDate, endDate string) ([]models.Transaction, error) {
+	return t.service.FindbyMerchant(id, startDate, endDate)
 }
 
 // DeleteById implements TransactionService.

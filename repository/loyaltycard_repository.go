@@ -105,12 +105,11 @@ func (l *loyaltyCardRepository) AddPoints(loyalty models.LoyaltyCard, points int
 	//On doit enregistrer l historique
 	transaction.CreatedAt = time.Now()
 	transaction.Description = "Earn"
-	transaction.LoyaltyCardID = loyalty.ID
-	transaction.MerchantId = loyalty.MerchantID
+	transaction.LoyaltyCardID = existing.ID
+	transaction.MerchantId = existing.MerchantID
 	transaction.Points = points
 	transaction.Type = "earn"
 	l.BD.Save(&transaction)
-
 	return existing, nil
 }
 

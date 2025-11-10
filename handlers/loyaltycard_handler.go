@@ -52,7 +52,7 @@ func ParamLoyaltyCardRoutes(cx *gin.Engine, db *gorm.DB) {
 		ctx.JSON(200, loyaltyCardController.DeleteById(id))
 	})
 	//Add Points
-	r.POST("/loyaltycard/:points", func(ctx *gin.Context) {
+	r.POST("/loyaltycard/add/:points", func(ctx *gin.Context) {
 		pointStr := ctx.Param("points")
 		points, err := strconv.Atoi(pointStr)
 		if err != nil {

@@ -33,4 +33,21 @@ func ParamTransactionRoutes(cx *gin.Engine, db *gorm.DB) {
 		transactionController.DeleteById(id)
 		ctx.JSON(http.StatusNoContent, gin.H{"Delete Succes": id})
 	})
+	//Get Transaction by Merchant
+	r.GET("/transaction/merchant/:merchantId/:startDate/:endDate", func(ctx *gin.Context) {
+		startDate := ctx.Param("startDate")
+		endDate := ctx.Param("endDate")
+		idsMerchantId := ctx.Param("merchantId")
+		merchantid, err := strconv.Atoi(idsMerchantId)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"Erreur": "Format id incorrect ou manque le id"})
+			return
+		}
+		transactions, err := transactionController.FindbyMerchant(merchantid, startDate, endDate)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"Erreur": "Bad request"})
+			return
+		}
+		ctx.JSON(200, transactions)
+	})
 }
