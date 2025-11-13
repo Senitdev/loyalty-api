@@ -13,7 +13,7 @@ type Merchant struct {
 	Phone     string    `json:"phone"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	Password  string
+	Password  string    `json:"-"`
 	UserRef   string
 	// Relations
 	Rewards []Reward `json:"rewards,omitempty"`

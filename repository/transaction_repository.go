@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"loyalty-api/controller/dto"
 	"loyalty-api/internal/models"
 	"strings"
 
@@ -13,9 +14,15 @@ type TransactionRepository interface {
 	FindAll() []models.Transaction
 	FindbyLoyalCard(id int) []models.Transaction
 	FindbyMerchant(merchant_id int, startDate, endDate string) ([]models.Transaction, error)
+	FindByClient(client_id int, startDate, endDate string) ([]dto.TransactionDTO, error)
 }
 type transactionRepository struct {
 	DB *gorm.DB
+}
+
+// FindByClient implements TransactionRepository.
+func (t *transactionRepository) FindByClient(client_id int, startDate string, endDate string) ([]dto.TransactionDTO, error) {
+	panic("unimplemented")
 }
 
 // FndbyMerchant implements TransactionRepository.

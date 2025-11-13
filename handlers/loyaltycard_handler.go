@@ -24,6 +24,7 @@ func ParamLoyaltyCardRoutes(cx *gin.Engine, db *gorm.DB) {
 	r.GET("/loyaltycard", func(ctx *gin.Context) {
 		ctx.JSON(200, loyaltyCardController.FindAll())
 	})
+	//Get list loyaltycardByUser
 	r.GET("/loyaltycard/user/:id", func(ctx *gin.Context) {
 		ids := ctx.Param("id")
 		id, err := strconv.Atoi(ids)
@@ -71,7 +72,7 @@ func ParamLoyaltyCardRoutes(cx *gin.Engine, db *gorm.DB) {
 			//return
 		}
 	})
-	//Solde loyalty
+	//Solde loyalty du  merchant
 	r.POST("/loyaltycard/solde", func(ctx *gin.Context) {
 		points, err := loyaltyCardController.SoldePointsClient(ctx)
 		var loyalcard models.LoyaltyCard
@@ -103,7 +104,7 @@ func ParamLoyaltyCardRoutes(cx *gin.Engine, db *gorm.DB) {
 			//return
 		}
 	})
-	//Solde
+	//Solde par merchant
 	r.GET("/loyaltycard/merchant/solde/:merchantId", func(ctx *gin.Context) {
 		ids := ctx.Param("merchantId")
 		Idmerchant, err := strconv.Atoi(ids)
@@ -116,5 +117,33 @@ func ParamLoyaltyCardRoutes(cx *gin.Engine, db *gorm.DB) {
 		loyaltyDto.Merchant = Idmerchant
 		loyaltyDto.Solde = solde
 		ctx.JSON(200, loyaltyDto)
+	})
+	//Solde client tous merchants confondus
+	r.GET("/loyaltycard/user/solde/:clientId", func(ctx *gin.Context) {
+		ids := ctx.Param("clientId")
+		Idclient, err := strconv.Atoi(ids)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"Erreur": "Manque le Id client"})
+			return
+		}
+		var solde, errSolde = loyaltyCardController.SoldePointsClientByAllMerchants(Idclient)
+		if errSolde != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"Erreur": "Impossible de trouver le solde"})
+			return
+		}
+		var loyaltyDto dto.LoyaltycardDto
+		loyaltyDto.Solde = solde
+		ctx.JSON(200, loyaltyDto)
+	})
+	//Lister les boutiques abonnees pour un clients
+	//Ca permet de savoir si un client est adherent sur plusieurs boutique ou merchant
+	r.GET("loyaltycard/user/merchant/:clientId", func(ctx *gin.Context) {
+		ids := ctx.Param("clientId")
+		Idclient, err := strconv.Atoi(ids)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"Erreur": "Manque le Id client"})
+			return
+		}
+		ctx.JSON(200, loyaltyCardController.FindAllMerchantByClient(Idclient))
 	})
 }

@@ -11,5 +11,6 @@ type Transaction struct {
 	Description   string      `json:"description"`
 	CreatedAt     time.Time   `json:"created_at"`
 	MerchantId    int         `json:"merchant_id"`
+	ClientId      int         `json:"client_id"`
 	LoyaltyCard   LoyaltyCard `json:"loyalty_card" gorm:"foreignKey:LoyaltyCardID"`
 }

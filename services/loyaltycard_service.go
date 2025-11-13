@@ -1,6 +1,7 @@
 package service
 
 import (
+	"loyalty-api/controller/dto"
 	"loyalty-api/internal/models"
 	"loyalty-api/repository"
 	"time"
@@ -10,15 +11,27 @@ type LoyaltyCardService interface {
 	Save(loyaltyCard models.LoyaltyCard) models.LoyaltyCard
 	DeleteById(id int) error
 	FindAll() []models.LoyaltyCard
-	FindAllByUser(id int) []models.LoyaltyCard
+	FindAllByUser(id int) []models.Clients
 	FindAllByMerchant(id int) []models.LoyaltyCard
 	AddPointsCard(loyalty models.LoyaltyCard, points int) (models.LoyaltyCard, error)
 	SoldePointsClient(loyalty models.LoyaltyCard) (int, error)
 	RetraitPointsClient(loyalty models.LoyaltyCard, points int) (models.LoyaltyCard, error)
 	SoldeMerchant(merchantId int) int
+	SoldePointsClientByAllMerchants(clientId int) (int, error)
+	FindAllMerchantByClient(clientId int) []dto.MerchantDto
 }
 type loyaltyCardService struct {
 	service repository.LoyaltyRepository
+}
+
+// FindAllMerchantByClient implements LoyaltyCardService.
+func (l *loyaltyCardService) FindAllMerchantByClient(clientId int) []dto.MerchantDto {
+	return l.service.FindAllMerchantByClient(clientId)
+}
+
+// SoldePointsClientByAllMerchants implements LoyaltyCardService.
+func (l *loyaltyCardService) SoldePointsClientByAllMerchants(clientId int) (int, error) {
+	return l.service.SoldePointsClientByAllMerchants(clientId)
 }
 
 // SoldeMerchant implements LoyaltyCardService.
@@ -71,7 +84,7 @@ func (l *loyaltyCardService) FindAllByMerchant(id int) []models.LoyaltyCard {
 }
 
 // FindAllByUser implements LoyaltyCardService.
-func (l *loyaltyCardService) FindAllByUser(id int) []models.LoyaltyCard {
+func (l *loyaltyCardService) FindAllByUser(id int) []models.Clients {
 	return l.service.FindAllByUser(id)
 }
 
