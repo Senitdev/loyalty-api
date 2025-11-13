@@ -50,4 +50,23 @@ func ParamTransactionRoutes(cx *gin.Engine, db *gorm.DB) {
 		}
 		ctx.JSON(200, transactions)
 	})
+	//Get historique transaction du client passe en param
+	//Get Transaction by Merchant
+	r.GET("/transaction/client/:clientId/:startDate/:endDate", func(ctx *gin.Context) {
+		clientId := ctx.Param("clientId")
+		startDate := ctx.Param("startDate")
+		endDate := ctx.Param("enDate")
+		idsClient, err := strconv.Atoi(clientId)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"Erreur": "Manque id client"})
+			return
+		}
+		transactionDTO, err := transactionController.FindByClient(idsClient, startDate, endDate)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"Erreur": "Erreur dans la requete"})
+			return
+		}
+
+		ctx.JSON(200, transactionDTO)
+	})
 }

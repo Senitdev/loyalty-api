@@ -1,6 +1,7 @@
 package service
 
 import (
+	"loyalty-api/controller/dto"
 	"loyalty-api/internal/models"
 	"loyalty-api/repository"
 	"time"
@@ -12,9 +13,15 @@ type TransactionService interface {
 	FindAll() []models.Transaction
 	FindbyLoyalCard(id int) []models.Transaction
 	FindbyMerchant(merchant_id int, startDate, endDate string) ([]models.Transaction, error)
+	FindByClient(client_id int, startDate, endDate string) ([]dto.TransactionDTO, error)
 }
 type transactionService struct {
 	service repository.TransactionRepository
+}
+
+// FindByClient implements TransactionService.
+func (t *transactionService) FindByClient(client_id int, startDate string, endDate string) ([]dto.TransactionDTO, error) {
+	return t.service.FindByClient(client_id, startDate, endDate)
 }
 
 // FindbyMerchant implements TransactionService.
