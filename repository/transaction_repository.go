@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"loyalty-api/controller/dto"
 	"loyalty-api/internal/models"
 	"strings"
@@ -36,13 +37,13 @@ func (t *transactionRepository) FindByClient(client_id int, startDate string, en
 
 	startDate = strings.TrimSpace(startDate)
 	endDate = strings.TrimSpace(endDate)
-
+	fmt.Println("startDate:", startDate, "endDate:", endDate)
 	// ------------------------------
 	// 2. Requête de base
 	// ------------------------------
 	query := t.DB.Where("client_id = ?", client_id)
 
-	if startDate != "" && endDate != "" {
+	if startDate != "20250101" && endDate != "" && startDate != "" {
 		query = query.Where("DATE(created_at) BETWEEN ? AND ?", startDate, endDate)
 	} else {
 		query = query.Limit(4)

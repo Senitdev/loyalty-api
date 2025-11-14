@@ -55,7 +55,7 @@ func ParamTransactionRoutes(cx *gin.Engine, db *gorm.DB) {
 	r.GET("/transaction/client/:clientId/:startDate/:endDate", func(ctx *gin.Context) {
 		clientId := ctx.Param("clientId")
 		startDate := ctx.Param("startDate")
-		endDate := ctx.Param("enDate")
+rr		endDate := ctx.Param("endDate")
 		idsClient, err := strconv.Atoi(clientId)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"Erreur": "Manque id client"})
