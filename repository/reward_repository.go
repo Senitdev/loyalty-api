@@ -74,7 +74,7 @@ func (r *rewardRepository) FindAll() []models.Reward {
 // GetRewardByMerchant implements RewardRepository.
 func (r *rewardRepository) GetRewardByMerchant(id int) []models.Reward {
 	var reward []models.Reward
-	if result := r.DB.Where("merchant_id", id).Find(&models.Reward{}).Error; result != nil {
+	if result := r.DB.Where("merchant_id = ?", id).Find(&reward).Error; result != nil {
 		return reward
 	}
 	return reward

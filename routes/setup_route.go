@@ -23,6 +23,8 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 	}
 	r.Use(cors.New(config))
 	//On defini les routes
+	//login
+	handlers.ParamLogin(r, db)
 	//Users
 	handlers.ParamUserRoutes(r, db)
 	//Merchant
