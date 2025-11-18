@@ -4,7 +4,6 @@ import (
 	"loyalty-api/controller"
 	"loyalty-api/repository"
 	service "loyalty-api/services"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -17,13 +16,5 @@ func ParamLogin(ctx *gin.Engine, db *gorm.DB) {
 	jwtService := service.NewJWTService()
 	logincontroller := controller.NewLoginController(loginservice, jwtService)
 	r := ctx.Group("/api/v1")
-	r.POST("/auth", func(ctx *gin.Context) {
-		token := logincontroller.Login(ctx)
-		if token == "" {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Authentication failed"})
-			return
-		} else {
-			ctx.JSON(http.StatusOK, gin.H{"token": token})
-		}
-	})
+	r.POST("/auth", logincontroller.Login)
 }

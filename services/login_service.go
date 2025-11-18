@@ -1,22 +1,24 @@
 package service
 
-import "loyalty-api/repository"
+import (
+	"loyalty-api/controller/dto"
+	"loyalty-api/repository"
+)
 
 type LoginService interface {
-	GetUserByLogin(username string, password string) bool
+	GetUserByLogin(email string, password string) (dto.UserDTO, bool)
 }
 type loginService struct {
 	service repository.LoginRepository
 }
 
 // GetUserByLoginAndPassword implements Loginv2Service.
-func (l *loginService) GetUserByLogin(username string, password string) bool {
-	result := l.service.GetUserByLoginAndPassword(username, password)
-	if !result {
-		return false
+func (l *loginService) GetUserByLogin(email string, password string) (dto.UserDTO, bool) {
+	result, ok := l.service.GetUserByLoginAndPassword(email, password)
+	if !ok {
+		return dto.UserDTO{}, false
 	}
-	return true
-
+	return result, true
 }
 
 // Login implements Loginv2Service.

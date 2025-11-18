@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"loyalty-api/internal/models"
 	"time"
 
@@ -56,7 +57,6 @@ func (c *clientRepository) GetClientById(id int) models.Clients {
 
 // Save implements ClientsRepository.
 func (c *clientRepository) Save(clients models.Clients) models.Clients {
-	clients.Password = ""
 	id := uuid.New()
 	clients.UserRef = id.String()
 	if result := c.DB.Save(&clients).Error; result != nil {
@@ -69,6 +69,7 @@ func (c *clientRepository) Save(clients models.Clients) models.Clients {
 		// tu peux gérer l’erreur comme tu veux, par exemple log.Fatal ou retourner une erreur
 		panic("Erreur lors du hachage du mot de passe : " + err.Error())
 	}
+	fmt.Print("password saisie", clients.Password)
 	var user models.User
 	user.CreatedAt = time.Now()
 	user.Role = "client"

@@ -1,6 +1,6 @@
 package dto
 
 type Credentials struct {
-	Username string `form:"username"`
+	Email    string `form:"email"`
 	Password string `form:"password"`
 }
