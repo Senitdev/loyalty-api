@@ -191,7 +191,7 @@ func (l *loyaltyCardRepository) DeleteById(id int) error {
 // FindAll implements LoyaltyRepository.
 func (l *loyaltyCardRepository) FindAll() []models.LoyaltyCard {
 	var loyaltyCard []models.LoyaltyCard
-	result := l.BD.Find(&models.LoyaltyCard{})
+	result := l.BD.Find(&loyaltyCard)
 	if result.Error != nil {
 		return loyaltyCard
 	}
@@ -201,7 +201,7 @@ func (l *loyaltyCardRepository) FindAll() []models.LoyaltyCard {
 // FindAllByMerchant implements LoyaltyRepository.
 func (l *loyaltyCardRepository) FindAllByMerchant(id int) []models.LoyaltyCard {
 	var loyaltyCard []models.LoyaltyCard
-	result := l.BD.Where("merchant_id=?", id).Find(&models.LoyaltyCard{})
+	result := l.BD.Where("merchant_id=?", id).Find(&loyaltyCard)
 	if result.Error != nil {
 		return loyaltyCard
 	}

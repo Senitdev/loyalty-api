@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"loyalty-api/controller"
+	midllewares "loyalty-api/middlewares"
 	"loyalty-api/repository"
 	service "loyalty-api/services"
 
@@ -13,7 +14,7 @@ func ParamUserRoutes(cx *gin.Engine, db *gorm.DB) {
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo)
 	userController := controller.NewUserController(userService)
-	r := cx.Group("/api/v1")
+	r := cx.Group("/api/v1", midllewares.AuthorizeJWT())
 	r.POST("/user", func(ctx *gin.Context) {
 		ctx.JSON(200, userController.SaveUser(ctx))
 	})

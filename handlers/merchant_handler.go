@@ -3,6 +3,7 @@ package handlers
 import (
 	"loyalty-api/controller"
 	"loyalty-api/internal/models"
+	midllewares "loyalty-api/middlewares"
 	"loyalty-api/repository"
 	service "loyalty-api/services"
 	"net/http"
@@ -16,7 +17,7 @@ func ParamMerchantRoutes(cx *gin.Engine, db *gorm.DB) {
 	merchantRepo := repository.NewMerchantRepository(db)
 	merchandService := service.NewMerchantService(merchantRepo)
 	merchantController := controller.NewMerchantController(merchandService)
-	r := cx.Group("api/v1")
+	r := cx.Group("api/v1", midllewares.AuthorizeJWT())
 	r.POST("/merchant", func(ctx *gin.Context) {
 		ctx.JSON(200, merchantController.SaveMerchant(ctx))
 	})

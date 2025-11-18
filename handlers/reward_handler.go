@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"loyalty-api/controller"
+	midllewares "loyalty-api/middlewares"
 	"loyalty-api/repository"
 	service "loyalty-api/services"
 	"net/http"
@@ -15,7 +16,7 @@ func ParamRewardRoutes(cx *gin.Engine, db *gorm.DB) {
 	rewardRepo := repository.NewRewardRepository(db)
 	rewardService := service.NewRewardService(rewardRepo)
 	rewardController := controller.NewRewardController(rewardService)
-	r := cx.Group("/api/v1")
+	r := cx.Group("/api/v1", midllewares.AuthorizeJWT())
 	r.POST("/reward", func(ctx *gin.Context) {
 		ctx.JSON(200, rewardController.Save(ctx))
 	})
