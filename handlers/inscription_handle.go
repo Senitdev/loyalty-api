@@ -17,7 +17,7 @@ func ParamInscriptionRoutes(cx *gin.Engine, db *gorm.DB) {
 	clientsController := controller.NewClientsController(clientsService)
 	r := cx.Group("/api/v1")
 	//Save
-	r.POST("/clients", func(ctx *gin.Context) {
+	r.POST("/inscription", func(ctx *gin.Context) {
 		ctx.JSON(200, clientsController.Save(ctx))
 	})
 
