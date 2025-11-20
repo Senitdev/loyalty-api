@@ -12,13 +12,21 @@ import (
 func ParamInscriptionRoutes(cx *gin.Engine, db *gorm.DB) {
 	//declaration des variables
 	//Inscription routes
+	//clients
 	clientsRepo := repository.NewClientsRepository(db)
 	clientsService := service.NewClientsService(clientsRepo)
 	clientsController := controller.NewClientsController(clientsService)
+	//Merchant inscription
+	merchantRepo := repository.NewMerchantRepository(db)
+	merchandService := service.NewMerchantService(merchantRepo)
+	merchantController := controller.NewMerchantController(merchandService)
 	r := cx.Group("/api/v1")
 	//Save
-	r.POST("/inscription", func(ctx *gin.Context) {
+	r.POST("/inscription/client", func(ctx *gin.Context) {
 		ctx.JSON(200, clientsController.Save(ctx))
 	})
-
+	//Merchant
+	r.POST("/inscription/merchant", func(ctx *gin.Context) {
+		ctx.JSON(200, merchantController.SaveMerchant(ctx))
+	})
 }

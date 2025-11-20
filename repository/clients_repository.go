@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"fmt"
+	"errors"
 	"loyalty-api/internal/models"
 	"time"
 
@@ -11,7 +11,7 @@ import (
 )
 
 type ClientsRepository interface {
-	Save(clients models.Clients) models.Clients
+	Save(clients models.Clients) error
 	FindAll() []models.Clients
 	GetClientById(id int) models.Clients
 	DeleteClientsById(id int) error
@@ -56,11 +56,13 @@ func (c *clientRepository) GetClientById(id int) models.Clients {
 }
 
 // Save implements ClientsRepository.
-func (c *clientRepository) Save(clients models.Clients) models.Clients {
+func (c *clientRepository) Save(clients models.Clients) error {
 	id := uuid.New()
 	clients.UserRef = id.String()
 	if result := c.DB.Save(&clients).Error; result != nil {
-		return clients
+		if errors.Is(result, gorm.ErrDuplicatedKey) {
+			return errors.New("Erreur de doublons")
+		}
 	}
 	//On renseigne la table users
 	// Génère le hash du mot de passe avant de sauvegarder
@@ -69,7 +71,6 @@ func (c *clientRepository) Save(clients models.Clients) models.Clients {
 		// tu peux gérer l’erreur comme tu veux, par exemple log.Fatal ou retourner une erreur
 		panic("Erreur lors du hachage du mot de passe : " + err.Error())
 	}
-	fmt.Print("password saisie", clients.Password)
 	var user models.User
 	user.CreatedAt = time.Now()
 	user.Role = "client"
@@ -78,7 +79,7 @@ func (c *clientRepository) Save(clients models.Clients) models.Clients {
 	user.Password = string(hashedPassword)
 	user.Ref = id.String()
 	c.DB.Save(&user)
-	return clients
+	return nil
 }
 
 // UpdateClient implements ClientsRepository.

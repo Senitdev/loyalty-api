@@ -124,7 +124,7 @@ func NewJWTService() JWTService {
 	return &jwtService{
 		secretKey:       getEnv("JWT_SECRET", "access_secret"),
 		refreshKey:      getEnv("JWT_REFRESH_SECRET", "refresh_secret"),
-		issuer:          "pape",
+		issuer:          time.Hour.String(),
 		accessTokenExp:  time.Hour,          // 1h
 		refreshTokenExp: 24 * 7 * time.Hour, // 7 jours
 	}

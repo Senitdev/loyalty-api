@@ -17,10 +17,7 @@ func ParamMerchantRoutes(cx *gin.Engine, db *gorm.DB) {
 	merchantRepo := repository.NewMerchantRepository(db)
 	merchandService := service.NewMerchantService(merchantRepo)
 	merchantController := controller.NewMerchantController(merchandService)
-	r := cx.Group("api/v1", midllewares.AuthorizeJWT())
-	r.POST("/merchant", func(ctx *gin.Context) {
-		ctx.JSON(200, merchantController.SaveMerchant(ctx))
-	})
+	r := cx.Group("/api/v1", midllewares.AuthorizeJWT())
 	r.GET("/merchant", func(ctx *gin.Context) {
 		ctx.JSON(200, merchantController.FindAllMerchant())
 	})

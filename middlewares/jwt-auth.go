@@ -5,8 +5,8 @@ import (
 	service "loyalty-api/services"
 	"net/http"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 )
 
 func AuthorizeJWT() gin.HandlerFunc {

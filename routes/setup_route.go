@@ -39,5 +39,7 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 	handlers.ParamTransactionRoutes(r, db)
 	//Clients
 	handlers.ParamClientsRoutes(r, db)
+	//Inscription
+	handlers.ParamInscriptionRoutes(r, db)
 	return r
 }

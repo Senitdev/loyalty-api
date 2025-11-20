@@ -7,7 +7,7 @@ import (
 )
 
 type MerchantService interface {
-	SaveMerchant(merchant models.Merchant) models.Merchant
+	SaveMerchant(merchant models.Merchant) error
 	FindAllMerchant() []models.Merchant
 	DeleteMerchantById(id int) error
 	FindMerchantById(id int) (models.Merchant, error)
@@ -42,7 +42,7 @@ func (m *merchantService) FindMerchantById(id int) (models.Merchant, error) {
 }
 
 // SaveMerchant implements MerchantService.
-func (m *merchantService) SaveMerchant(merchant models.Merchant) models.Merchant {
+func (m *merchantService) SaveMerchant(merchant models.Merchant) error {
 	merchant.CreatedAt = time.Now()
 	merchant.UpdatedAt = time.Now()
 	return m.service.Save(merchant)

@@ -7,7 +7,7 @@ import (
 )
 
 type ClientsService interface {
-	Save(clients models.Clients) models.Clients
+	Save(clients models.Clients) error
 	FindAll() []models.Clients
 	GetClientById(id int) models.Clients
 	DeleteClientsById(id int) error
@@ -47,7 +47,7 @@ func (c *clientsService) GetClientById(id int) models.Clients {
 }
 
 // Save implements ClientsService.
-func (c *clientsService) Save(clients models.Clients) models.Clients {
+func (c *clientsService) Save(clients models.Clients) error {
 	clients.CreatedAt = time.Now().UTC()
 	return c.service.Save(clients)
 }

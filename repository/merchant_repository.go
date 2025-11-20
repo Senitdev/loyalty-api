@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"loyalty-api/internal/models"
 	"time"
 
@@ -10,7 +11,7 @@ import (
 )
 
 type MerchantRepository interface {
-	Save(merchant models.Merchant) models.Merchant
+	Save(merchant models.Merchant) error
 	FindAll() []models.Merchant
 	DeleteMerchantById(id int) error
 	FindMerchantById(id int) (models.Merchant, error)
@@ -60,7 +61,7 @@ func (m *merchantRepository) FindMerchantById(id int) (models.Merchant, error) {
 }
 
 // Save implements MerchantRepository.
-func (m *merchantRepository) Save(merchant models.Merchant) models.Merchant {
+func (m *merchantRepository) Save(merchant models.Merchant) error {
 	id := uuid.New()
 	// Génère le hash du mot de passe avant de sauvegarder
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(merchant.Password), bcrypt.DefaultCost)
@@ -69,10 +70,6 @@ func (m *merchantRepository) Save(merchant models.Merchant) models.Merchant {
 		panic("Erreur lors du hachage du mot de passe : " + err.Error())
 	}
 	merchant.UserRef = id.String()
-	result := m.DB.Save(&merchant)
-	if result != nil {
-		return merchant
-	}
 	var user models.User
 	user.CreatedAt = time.Now()
 	user.Role = "merchant"
@@ -80,9 +77,18 @@ func (m *merchantRepository) Save(merchant models.Merchant) models.Merchant {
 	user.Name = merchant.Name
 	user.Ref = id.String()
 	user.Password = string(hashedPassword)
-	m.DB.Save(&user)
+	if err := m.DB.Save(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrDuplicatedKey) {
+			return errors.New("Erreur de doublons")
+
+		}
+	}
+	result := m.DB.Save(&merchant)
+	if result != nil {
+		return result.Error
+	}
 	//On renseigne
-	return merchant
+	return nil
 }
 
 // UpdateMerchant implements MerchantRepository.
