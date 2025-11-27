@@ -61,7 +61,7 @@ func (c *clientRepository) Save(clients models.Clients) error {
 	clients.UserRef = id.String()
 	if result := c.DB.Save(&clients).Error; result != nil {
 		if errors.Is(result, gorm.ErrDuplicatedKey) {
-			return errors.New("Erreur de doublons")
+			return errors.New("erreur de doublons")
 		}
 	}
 	//On renseigne la table users

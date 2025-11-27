@@ -145,7 +145,7 @@ func (t *transactionRepository) FindAll() []models.Transaction {
 // FindbyLoyalCard implements TransactionRepository.
 func (t *transactionRepository) FindbyLoyalCard(id int) []models.Transaction {
 	var transaction []models.Transaction
-	t.DB.Where("loyalty_card_id", id).Find(&transaction)
+	t.DB.Where("loyalty_card_id=?", id).Find(&transaction)
 	return transaction
 }
 

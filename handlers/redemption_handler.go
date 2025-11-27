@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"loyalty-api/controller"
-	midllewares "loyalty-api/middlewares"
 	"loyalty-api/repository"
 	service "loyalty-api/services"
 	"net/http"
@@ -16,7 +15,7 @@ func ParamRedemptionRoutes(cx *gin.Engine, db *gorm.DB) {
 	redemptionRepo := repository.NewRedemptionRepository(db)
 	redemptionService := service.NewRedemptionService(redemptionRepo)
 	redemptionController := controller.NewRedemptionController(redemptionService)
-	r := cx.Group("/api/v1", midllewares.AuthorizeJWT())
+	r := cx.Group("/api/v1")
 	r.POST("/redemption", func(ctx *gin.Context) {
 		ctx.JSON(200, redemptionController.Save(ctx))
 	})

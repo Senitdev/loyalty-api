@@ -1,6 +1,7 @@
 package service
 
 import (
+	"loyalty-api/internal/dto"
 	"loyalty-api/internal/models"
 	"loyalty-api/repository"
 )
@@ -8,7 +9,7 @@ import (
 type UserService interface {
 	SaveUser(user models.User) models.User
 	FindAllUser() []models.User
-	GetUserByEmail(email string) (models.User, error)
+	GetUserByEmail(email string) (dto.UserDTO, error)
 	DeleteUserById(id uint) error
 	UpdateUser(id uint, user models.User) (models.User, error)
 }
@@ -30,13 +31,16 @@ func (u *userService) FindAllUser() []models.User {
 }
 
 // GetUserByEmail implements UserService.
-func (u *userService) GetUserByEmail(email string) (models.User, error) {
-	var user models.User
-	user, err := u.service.GetUserByEmail(email)
+func (u *userService) GetUserByEmail(email string) (dto.UserDTO, error) {
+	//var users models.User
+	/*userDto, err := u.service.GetUserByEmail(email)
 	if err != nil {
-		return user, err
+		return userDto, err
 	}
-	return user, nil
+	fmt.Println("donne service ", userDto)
+	*/
+	return u.service.GetUserByEmail(email)
+
 }
 
 // SaveUser implements UserService.

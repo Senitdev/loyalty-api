@@ -79,7 +79,7 @@ func (m *merchantRepository) Save(merchant models.Merchant) error {
 	user.Password = string(hashedPassword)
 	if err := m.DB.Save(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrDuplicatedKey) {
-			return errors.New("Erreur de doublons")
+			return errors.New("erreur de doublons")
 
 		}
 	}

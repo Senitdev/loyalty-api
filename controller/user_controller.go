@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"loyalty-api/internal/dto"
 	"loyalty-api/internal/models"
 	service "loyalty-api/services"
 
@@ -10,7 +11,7 @@ import (
 type UserController interface {
 	SaveUser(ctx *gin.Context) models.User
 	FindAllUser() []models.User
-	GetUserByEmail(email string) (models.User, error)
+	GetUserByEmail(email string) (dto.UserDTO, error)
 	DeleteUserById(id uint) error
 	UpdateUser(id uint, user models.User) (models.User, error)
 }
@@ -32,12 +33,12 @@ func (u *userController) FindAllUser() []models.User {
 }
 
 // GetUserByEmail implements UserController.
-func (u *userController) GetUserByEmail(email string) (models.User, error) {
-	var user models.User
-	if user, err := u.controller.GetUserByEmail(email); err != nil {
-		return user, err
+func (u *userController) GetUserByEmail(email string) (dto.UserDTO, error) {
+	userDTO, err := u.controller.GetUserByEmail(email)
+	if err != nil {
+		return userDTO, err
 	}
-	return user, nil
+	return userDTO, nil
 }
 
 // SaveUser implements UserController.

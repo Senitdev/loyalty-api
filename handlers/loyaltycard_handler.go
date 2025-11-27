@@ -4,7 +4,6 @@ import (
 	"loyalty-api/controller"
 	"loyalty-api/controller/dto"
 	"loyalty-api/internal/models"
-	midllewares "loyalty-api/middlewares"
 
 	"loyalty-api/repository"
 	service "loyalty-api/services"
@@ -20,7 +19,7 @@ func ParamLoyaltyCardRoutes(cx *gin.Engine, db *gorm.DB) {
 	loyaltycarService := service.NewLoyaltyCardService(loyaltycardRepo)
 	loyaltyCardController := controller.NewLoyaltyCardController(loyaltycarService)
 	//on protege la route avec le middleware d'authentification
-	r := cx.Group("/api/v1", midllewares.AuthorizeJWT())
+	r := cx.Group("/api/v1")
 	r.POST("/loyaltycard", func(ctx *gin.Context) {
 		ctx.JSON(200, loyaltyCardController.Save(ctx))
 	})

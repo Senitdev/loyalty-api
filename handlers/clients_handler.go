@@ -3,7 +3,6 @@ package handlers
 import (
 	"loyalty-api/controller"
 	"loyalty-api/internal/models"
-	midllewares "loyalty-api/middlewares"
 	"loyalty-api/repository"
 	service "loyalty-api/services"
 	"net/http"
@@ -19,7 +18,7 @@ func ParamClientsRoutes(cx *gin.Engine, db *gorm.DB) {
 	clientsRepo := repository.NewClientsRepository(db)
 	clientsService := service.NewClientsService(clientsRepo)
 	clientsController := controller.NewClientsController(clientsService)
-	r := cx.Group("/api/v1", midllewares.AuthorizeJWT())
+	r := cx.Group("/api/v1")
 
 	//GET ALL
 	r.GET("/clients", func(ctx *gin.Context) {

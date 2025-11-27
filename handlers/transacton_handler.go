@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"loyalty-api/controller"
-	midllewares "loyalty-api/middlewares"
 	"loyalty-api/repository"
 	service "loyalty-api/services"
 	"net/http"
@@ -16,7 +15,7 @@ func ParamTransactionRoutes(cx *gin.Engine, db *gorm.DB) {
 	transactionRepo := repository.NewTransctionRepository(db)
 	transactionService := service.NewTransactionService(transactionRepo)
 	transactionController := controller.NewTransactionController(transactionService)
-	r := cx.Group("/api/v1", midllewares.AuthorizeJWT())
+	r := cx.Group("/api/v1")
 	r.POST("/transaction", func(ctx *gin.Context) {
 		ctx.JSON(200, transactionController.Save(ctx))
 	})
